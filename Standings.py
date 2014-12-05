@@ -50,7 +50,7 @@ def get_standings(playoffs=True):
     return standings
 
 
-def get_conference_markdown(conference=None, playoff_standings=None):
+def get_conference_markdown(conference=None, playoff_standings=None, omit_eliminated=False):
     output = ''
     if not playoff_standings:
         playoff_standings = get_standings()
@@ -87,6 +87,8 @@ def get_conference_markdown(conference=None, playoff_standings=None):
         output_array.append([' ', '**In the Hunt**'])
         for team_array in conference_array[6:]:
             if team_array[1] in NFL.PLAYOFF_ELIMINATED_TEAMS:
+                if omit_eliminated:
+                    continue
                 team_array[0] = MarkdownOutput.strikethru(team_array[0])
                 team_array[1] = MarkdownOutput.strikethru(team_array[1])
             output_array.append(team_array)

@@ -36,6 +36,11 @@ Printing the NFC Playoff Picture
 
     print('## 2014 NFC Playoff Picture')
     print(get_conference_markdown(NFL.CONFERENCE_NAMES['nfc']))
+    
+Printing the NFC Playoff Picture and omit any eliminated teams
+
+    print('## 2014 NFC Playoff Picture')
+    print(get_conference_markdown(NFL.CONFERENCE_NAMES['nfc'], omit_eliminated=True))
 
 Printing the NFL Divisional Standings
 
