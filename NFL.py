@@ -70,9 +70,19 @@ TEAM_SUBREDDIT_MAP = {
 # the cities will already translated to the subreddit link
 PLAYOFF_ELIMINATED_TEAMS = [
     # NFC
+    TEAM_SUBREDDIT_MAP['Chicago'],
+    TEAM_SUBREDDIT_MAP['Minnesota'],
+    TEAM_SUBREDDIT_MAP['New Orleans'],
     TEAM_SUBREDDIT_MAP['NY Giants'],
+    TEAM_SUBREDDIT_MAP['Philadelphia'],
+    TEAM_SUBREDDIT_MAP['San Francisco'],
+    TEAM_SUBREDDIT_MAP['St. Louis'],
+    TEAM_SUBREDDIT_MAP['Tampa Bay'],
     TEAM_SUBREDDIT_MAP['Washington'],
     # AFC
+    TEAM_SUBREDDIT_MAP['Buffalo'],
+    TEAM_SUBREDDIT_MAP['Cleveland'],
+    TEAM_SUBREDDIT_MAP['Miami'],
     TEAM_SUBREDDIT_MAP['NY Jets'],
     TEAM_SUBREDDIT_MAP['Tennessee'],
     TEAM_SUBREDDIT_MAP['Jacksonville'],
