@@ -43,8 +43,11 @@ def get_standings(playoffs=True):
             team_dict = {}
             for i in range(len(team_row)):
                 team_dict[stat_cols[i]] = team_row[i].text.strip()
+            # Split playoff prefixes to get the city name
+            team_dict['TEAM'] = team_dict['TEAM'].split('-')[-1].strip()
             # Replace the city name for the subreddit link
-            team_dict['TEAM'] = NFL.TEAM_SUBREDDIT_MAP[team_dict['TEAM']]
+            # team_dict['TEAM'] = NFL.TEAM_SUBREDDIT_MAP[team_dict['TEAM']]
+            team_dict['TEAM'] = NFL.TEAM_SUBREDDIT_MAP.get(team_dict['TEAM'], team_dict['TEAM'])
             # team_container.append(team_dict)
             team_container[team_dict['TEAM']] = team_dict
     return standings
