@@ -7,8 +7,11 @@ import plotly.plotly as py
 import plotly.graph_objs as go
 from plotly.offline import download_plotlyjs, init_notebook_mode, iplot
 
+import numpy as np
+import matplotlib.pyplot as plt
 
-init_notebook_mode()
+
+# init_notebook_mode()
 
 PANLTY_TRACKER_URL = 'http://www.nflpenalties.com/team/{team}?year={year}&view=games'
 
@@ -144,6 +147,94 @@ def get_team_stats(team):
 
 def plot_penalty_total_count(team_stats):
     bar_title = []
+    against = {'Total Count': [], 'Off Count': [], 'Def Count': [], 'ST Count': []}
+    beneficiary = {'Total Count': [], 'Off Count': [], 'Def Count': [], 'ST Count': []}
+    for i in range(1, 17):
+        penalties_against = team_stats.penalties.against.get(i)
+        penalties_beneficiary = team_stats.penalties.beneficiary.get(i)
+        if penalties_against:
+            bar_title.append(penalties_against['Opponent'])
+            for category in against.keys():
+                against[category].append(penalties_against[category])
+            for category in beneficiary.keys():
+                beneficiary[category].append(penalties_beneficiary[category])
+        else:
+            bar_title.append('')
+            for category in against.keys():
+                against[category].append(0)
+            for category in beneficiary.keys():
+                beneficiary[category].append(0)
+    print(bar_title)
+    pprint(against)
+    pprint(beneficiary)
+    print(max(against['Total Count']))
+    print(max(beneficiary['Total Count']))
+    max_penalty_count = max(against['Total Count'] + beneficiary['Total Count'])
+    print(max_penalty_count)
+    ceiling = (((max_penalty_count // 5) + 1) * 5) + 1
+    print('ceiling: ', ceiling)
+
+    ind = np.arange(16)
+    width = 0.35
+
+    pa1 = plt.bar(ind, against['Off Count'], width, color='#FF0000')
+    pa2 = plt.bar(ind, against['Def Count'], width, color='#660000', bottom=against['Off Count'])
+    pa3 = plt.bar(ind, against['ST Count'], width, color='#CC0000',
+                  bottom=[x + y for x, y in zip(against['Off Count'], against['Def Count'])])
+
+    pb1 = plt.bar(ind + width, beneficiary['Off Count'], width, color='#33FF00')
+    pb2 = plt.bar(ind + width, beneficiary['Def Count'], width, color='#006600', bottom=beneficiary['Off Count'])
+    pb3 = plt.bar(ind + width, beneficiary['ST Count'], width, color='#00CC00',
+                  bottom=[x + y for x, y in zip(beneficiary['Off Count'], beneficiary['Def Count'])])
+
+    plt.ylabel('Penalties')
+    plt.title('Penalties Against {}'.format(team_stats.team))
+    plt.xticks(ind + width / 2., bar_title, rotation=90)
+    plt.yticks(np.arange(0, ceiling, 5))
+    plt.legend((pa1[0], pa2[0], pa3[0], pb1[0], pb2[0], pb3[0]),
+               ('Off', 'Def', 'ST', 'Opp. Off', 'Opp. Def', 'Opp. ST'))
+
+    print(plt.margins())
+    plt.subplots_adjust(bottom=0.25)
+    # plt.margins(y=0.5)
+    # print(plt.margins())
+
+    # plt.show()
+    plt.savefig('foo.png')
+
+    # trace0 = go.Bar(
+    #     x=bar_title,
+    #     y=against,
+    #     name='Against {}'.format(team_stats.team),
+    #     marker=dict(
+    #         color='rgb(49,130,189)'
+    #     )
+    # )
+    # trace1 = go.Bar(
+    #     x=bar_title,
+    #     y=beneficiary,
+    #     name='Benefitting {}'.format(team_stats.team),
+    #     marker=dict(
+    #         color='rgb(204,204,204)',
+    #     )
+    # )
+    # data = [trace0, trace1]
+    # layout = go.Layout(
+    #     xaxis=dict(
+    #         # set x-axis' labels direction at 45 degree angle
+    #         tickangle=-45,
+    #     ),
+    #     barmode='group',
+    # )
+    # fig = dict(data=data, layout=layout)
+    # return iplot(fig)
+    # # fig = go.Figure(data=data, layout=layout)
+    # # plot_url = py.plot(fig, filename='2015 NFL Penalties/{}'.format(team_stats.team), auto_open=False)
+    # # return plot_url
+
+
+def plotly_penalty_total_count(team_stats):
+    bar_title = []
     against = []
     beneficiary = []
     for i in range(1, 17):
@@ -214,6 +305,7 @@ if __name__ == '__main__':
     # print(__version__)
     # init_notebook_mode()
 
+    TEAMS = {'Seattle': 'seattle-seahawks', }
     for team in TEAMS.keys():
         print(team, end="\t")
         plot_url = plot_penalty_total_count(get_team_stats(team))
